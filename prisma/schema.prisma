@@ -1,0 +1,225 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+  OWNER
+  BROKER
+}
+
+enum Permission {
+  room
+  land
+  store
+  hostel
+  repair
+  rental
+  restaurant
+}
+
+model User {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  email        String        @unique
+  image        String?
+  number       String?
+  password     String?
+  // ENUM
+  role         Role          @default(USER)
+  permission   Permission[]  @default([])
+  // RELATIONSHIP
+  rooms        Room[]        @relation("UserRooms")
+  reviews      RoomReview[]  @relation("RoomReviews")
+  // RELATIONSHIP
+  store        Store[]       @relation("UserStores")
+  storeReviews StoreReview[] @relation("StoreReviews")
+  // 
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@map("Users")
+}
+
+enum FurnishingStatusEnum {
+  UNFURNISHED
+  SEMIFURNISHED
+  FURNISHED
+}
+
+enum Amenities {
+  WIFI
+  WATER
+  PARKING
+}
+
+model Room {
+  id               String               @id @default(auto()) @map("_id") @db.ObjectId
+  mincapacity      Int
+  maxcapacity      Int
+  price            Float
+  name             String
+  roomNumber       String
+  city             String
+  location         String
+  direction        String?
+  videos           String?
+  photos           String[]
+  ratings          Float                @default(0)
+  available        Boolean              @default(true)
+  postedBy         Role                 @default(USER)
+  verified         Boolean              @default(false)
+  bedroom          Int
+  hall             Int
+  kitchen          Int
+  bathroom         Int
+  roomtype         String
+  // ENUM
+  furnishingStatus FurnishingStatusEnum
+  amenities        Amenities[]          @default([])
+  // RELATIONSHIP
+  roomReviews      RoomReview[]         @relation("RoomReviews")
+  // RELATIONSHIP
+  user             User                 @relation(fields: [userId], references: [id], name: "UserRooms")
+  userId           String               @db.ObjectId
+  // 
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  @@index([city])
+  @@index([userId])
+  @@map("Rooms")
+}
+
+model RoomReview {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  rating    Float
+  comment   String
+  // RELATIONSHIP 
+  room      Room     @relation(fields: [roomId], references: [id], name: "RoomReviews")
+  roomId    String   @db.ObjectId
+  // RELATIONSHIP 
+  user      User     @relation(fields: [userId], references: [id], name: "RoomReviews")
+  userId    String   @db.ObjectId
+  // 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  // @@index([roomId])
+  @@map("Room_Reviews")
+}
+
+enum StoreTypeEnum {
+  CLOTHING
+  FOOTWEAR
+  JEWELRY
+  COSMETICS
+  GADGETS
+  FURNITURE
+  SPORTS
+  GROCERY
+  PHARMACY
+  FITNESS
+  SPA
+  SALON
+  PETS
+  STATIONERY
+  HARDWARE
+  ELECTRONICS
+  GARDENING
+}
+
+model Store {
+  id           String          @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  storeNumber  String          @unique
+  description  String?
+  city         String
+  direction    String?
+  location     String
+  postedBy     Role            @default(USER)
+  photos       String[]
+  videos       String?
+  ratings      Float           @default(0)
+  verified     Boolean?
+  // ENUM
+  storeType    StoreTypeEnum[]
+  // RELATIONSHIP
+  user         User            @relation(fields: [userId], references: [id], name: "UserStores")
+  userId       String          @db.ObjectId
+  // RELATIONSHIP 
+  storeReviews StoreReview[]   @relation("StoreReviews")
+  // 
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([city])
+  @@index([userId])
+  @@map("Stores")
+}
+
+model StoreReview {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  rating    Float
+  comment   String
+  // RELATIONSHIP 
+  user      User     @relation(fields: [userId], references: [id], name: "StoreReviews")
+  userId    String   @db.ObjectId
+  // RELATIONSHIP 
+  store     Store    @relation(fields: [roomId], references: [id], name: "StoreReviews")
+  roomId    String   @db.ObjectId
+  // 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("Store_Reviews")
+}
+
+model Hostel {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  city      String
+  direction String?
+  location  String
+}
+
+model Restaurant {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  city      String
+  direction String?
+  location  String
+}
+
+model Land {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  city      String
+  direction String?
+  location  String
+}
+
+model Repair {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  city      String
+  direction String?
+  location  String
+}
+
+model Rental {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  city      String
+  direction String?
+  location  String
+}
