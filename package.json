@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
-  "name": "graphqlseerver",
+  "name": "graphqlserver",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",

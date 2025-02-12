@@ -17,6 +17,8 @@ import {
   getRoomReviews,
   getUserRoomReviews,
 } from "../../controllers/reviews.js";
+import { getUserListedRoomStats } from "../../controllers/dashboard.js";
+import { User } from "@prisma/client";
 
 export const graphQLResolver = {
   Mutation: {
@@ -33,6 +35,8 @@ export const graphQLResolver = {
     // REVIEW
     review: getReview,
     reviews: getReviews,
+    // DASHBOARD
+    totalListedRoom: getUserListedRoomStats,
   },
   User: {
     rooms: getUserCreatedRooms,

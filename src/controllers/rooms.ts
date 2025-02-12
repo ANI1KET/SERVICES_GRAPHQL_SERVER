@@ -3,8 +3,15 @@ import { Room, RoomReview, User } from "@prisma/client";
 import { prismaClient } from "../server.js";
 
 // QUERY
-export const getUserCreatedRooms = async (user: User) =>
-  await prismaClient.room.findMany({ where: { userId: user.id } });
+export const getUserCreatedRooms = async (
+  user: User,
+  args: { offset?: number; limit?: number }
+) =>
+  await prismaClient.room.findMany({
+    where: { userId: user.id },
+    skip: args.offset,
+    take: args.limit,
+  });
 
 export const getRoomReviewsById = async (roomReview: RoomReview) =>
   await prismaClient.room.findMany({ where: { id: roomReview.roomId } });

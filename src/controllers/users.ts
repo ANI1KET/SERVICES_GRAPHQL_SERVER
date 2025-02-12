@@ -18,9 +18,12 @@ export const getUserReviewsById = async (roomReview: RoomReview) =>
     },
   });
 
-export const getUser = async (_: User, arg: { id: string }) =>
+export const getUser = async (
+  _: User,
+  args: { id: string; offset: number; limit: number }
+) =>
   await prismaClient.user.findUnique({
-    where: { id: arg.id },
+    where: { id: args.id },
   });
 
 export const getUsers = async (_: User, __: any, context: Context) =>

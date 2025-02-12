@@ -18,18 +18,18 @@ enum Permission {
 }
 
 type User{
-    id:ID!
-    role:Role!
-    name:String!
-    image:String
-    email:String!
-    rooms:[Room!]
-    number:String
-    password:String
-    createdAt:String!
-    updatedAt:String!
-    permission:[Permission]
-    roomReviews:[RoomReview!]
+  id:ID!
+  role:Role!
+  name:String!
+  image:String
+  email:String!
+  number:String
+  password:String
+  createdAt:String!
+  updatedAt:String!
+  permission:[Permission]
+  roomReviews:[RoomReview!]
+  rooms(offset: Int, limit: Int): [Room!]
 }
 
 enum Amenities {
@@ -67,10 +67,11 @@ type Room{
     createdAt:String!
     updatedAt:String!
     verified:Boolean!
-    roomNumber:String!
     available:Boolean!
+    ownerContact:String!
     amenities:[Amenities]
     reviews:[RoomReview!]
+    primaryContact:String!
     furnishingStatus:FurnishingStatusEnum
 }
 
@@ -86,6 +87,19 @@ type RoomReview{
     updatedAt:String!
 }
 
+type CityRoomStats {
+  city: String!
+  totalRooms: Int!
+  availableRooms: Int!
+  unavailableRooms: Int!
+}
+
+type RoomStats {
+  totalRoomsListed:String!
+  totalAvailableRooms:String!
+  cityWiseStats:[CityRoomStats!]!
+}
+
 type Query{
     # USER
     users:[User]
@@ -96,6 +110,8 @@ type Query{
     # REVIEW
     reviews:[RoomReview]
     review(id:ID!):RoomReview
+    # DASHBOARD
+    totalListedRoom(id:ID!): RoomStats!
 }
 
 type Mutation{

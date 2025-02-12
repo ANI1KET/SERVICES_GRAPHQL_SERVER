@@ -32,9 +32,9 @@ const authMiddleware = async (
     req.user = {
       id: decodedToken.userId,
       name: decodedToken.name,
+      role: decodedToken.role,
       email: decodedToken.email,
       number: decodedToken.number,
-      role: decodedToken.role,
     } as User;
 
     return next();
