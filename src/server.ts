@@ -38,16 +38,16 @@ await graphQLServer.start();
 //     next();
 //   });
 // }
-app.use(
-  "/graphql",
-  [authMiddleware],
+app.use("/graphql", [
+  cors({ origin: true }),
+  authMiddleware,
   expressMiddleware(graphQLServer, {
     context: async ({ req }) => {
       return { user: req.user };
     },
     // context: async ({ req }) => ({ req }),
-  })
-);
+  }),
+]);
 
 app.use(errorMiddleware);
 

@@ -22,12 +22,9 @@ const authMiddleware = async (
     }
 
     if (decodedToken.role === "USER") {
-      next(
-        new UnauthorizedException(
-          "You are not authorized to excess",
-          ErrorCode.UNAUTHORIZED
-        )
-      );
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to access" });
     }
 
     req.user = {
