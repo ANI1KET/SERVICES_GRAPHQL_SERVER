@@ -39,7 +39,6 @@ export const userByEmailOrNumber = async (
     throw new Error("Provide filtering value to find user");
   }
 
-  console.log(args);
   return await prismaClient.user.findFirst({
     where: args.email ? { email: args.email } : { number: args.number },
   });
