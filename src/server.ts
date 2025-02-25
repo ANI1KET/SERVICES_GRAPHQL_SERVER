@@ -38,16 +38,21 @@ await graphQLServer.start();
 //     next();
 //   });
 // }
-app.use("/graphql", [
-  cors({ origin: true }),
+app.use(
+  "/graphql",
+  cors<cors.CorsRequest>({
+    origin: true,
+    credentials: true,
+  }),
+  express.json(),
   authMiddleware,
   expressMiddleware(graphQLServer, {
     context: async ({ req }) => {
       return { user: req.user };
     },
     // context: async ({ req }) => ({ req }),
-  }),
-]);
+  })
+);
 
 app.use(errorMiddleware);
 
