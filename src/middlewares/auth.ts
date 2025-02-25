@@ -1,5 +1,4 @@
 import { User } from "@prisma/client";
-import { getToken } from "next-auth/jwt";
 import { Request, NextFunction, Response } from "express";
 
 import { ErrorCode } from "../exceptions/errorhandler.js";
@@ -11,30 +10,22 @@ const authMiddleware = async (
   next: NextFunction
 ) => {
   try {
-    const decodedToken = await getToken({
-      req,
-      secret: process.env.JWT_TOKEN_SECRET,
-    });
-    console.log("! ", req.cookies);
+    const role = req.headers["x-user-role"] as string;
+    const permissionHeader = req.headers["x-user-permission"] as string;
 
-    if (!decodedToken) {
+    const permission = permissionHeader ? JSON.parse(permissionHeader) : [];
+
+    if (!role || !permission.length) {
       return res.status(401).json({ message: "Please log in to continue" });
     }
 
-    if (decodedToken.role === "USER") {
+    if (role === "USER") {
       return res
         .status(403)
         .json({ message: "You are not authorized to access" });
     }
 
-    req.user = {
-      id: decodedToken.userId,
-      name: decodedToken.name,
-      role: decodedToken.role,
-      email: decodedToken.email,
-      number: decodedToken.number,
-      permission: decodedToken.permission,
-    } as User;
+    req.user = { role, permission } as User;
 
     return next();
   } catch (e) {

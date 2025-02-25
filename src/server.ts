@@ -40,11 +40,6 @@ await graphQLServer.start();
 // }
 app.use(
   "/graphql",
-  cors<cors.CorsRequest>({
-    origin: true,
-    credentials: true,
-  }),
-  express.json(),
   authMiddleware,
   expressMiddleware(graphQLServer, {
     context: async ({ req }) => {
