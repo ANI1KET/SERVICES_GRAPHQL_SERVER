@@ -15,7 +15,7 @@ const authMiddleware = async (
       req,
       secret: process.env.JWT_TOKEN_SECRET,
     });
-    console.log("! ", decodedToken);
+    console.log("! ", req.cookies);
 
     if (!decodedToken) {
       return res.status(401).json({ message: "Please log in to continue" });
