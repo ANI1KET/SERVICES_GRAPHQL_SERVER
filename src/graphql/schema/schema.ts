@@ -29,7 +29,7 @@ type User{
   updatedAt:String!
   permission:[Permission]
   roomReviews:[RoomReview!]
-  rooms(offset: Int, limit: Int): [Room!]
+  rooms(offset: Int!, limit: Int!): [Room!]
 }
 
 enum Amenities {
@@ -100,23 +100,59 @@ type RoomStats {
   cityWiseStats:[CityRoomStats!]!
 }
 
+type RoomCitiesLocations {
+  city:String!
+  location:String!
+}
+
+type UserCategory {
+  total: Int!
+  users: [User!]!
+}
+
+type UserCategoryStats {
+  # ADMIN: UserCategory
+  OWNER: UserCategory
+  BROKER: UserCategory
+}
+
 type Query{
     # USER
     users:[User]
     user(id:ID!):User
+    userByEmailOrNumber(email:String,number:String):User
     # ROOM
     rooms:[Room]
     room(id:ID!):Room
+    listedRoomCitiesLocations(id:ID!):[RoomCitiesLocations!]!
+    cityLocationRooms(city:String!,location:String,offset: Int!, limit: Int!):[Room!]!
     # REVIEW
     reviews:[RoomReview]
     review(id:ID!):RoomReview
     # DASHBOARD
     totalListedRoom(id:ID!): RoomStats!
+    userCategoryStats: [UserCategoryStats!]!,
+}
+
+type MutationResponse {
+  message: String
 }
 
 type Mutation{
+  # ROLE AND PERMISSION UPDATION
+  updateRolePermission(id:ID!,role:Role,permission:[Permission!]!):MutationResponse
   # ROOM UPDATION
-  updateRoomAvailability(id:ID!,availability: Boolean!):Room
+  updateRoomAvailability(
+    id:ID!,
+    price:Int,
+    amenities:[String],
+    available: Boolean,
+    ownerContact:String,
+    primaryContact:String
+    furnishingStatus:FurnishingStatusEnum,
+  ): MutationResponse
+  # ROOM DELETION
+  deleteRoom(id:ID!):MutationResponse
 }
 
 `;

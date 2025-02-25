@@ -35,6 +35,7 @@ const authMiddleware = async (
       role: decodedToken.role,
       email: decodedToken.email,
       number: decodedToken.number,
+      permission: decodedToken.permission,
     } as User;
 
     return next();

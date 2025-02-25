@@ -7,8 +7,8 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "start": "node build/server.js",
-    "dev": "nodemon build/server.js"
+    "start": "set NODE_ENV=production&& node build/server.js",
+    "dev": "set NODE_ENV=development&& nodemon build/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -22,7 +22,7 @@
     "graphql": "^16.10.0",
     "next-auth": "^4.24.11",
     "prisma": "^5.13.0",
-    "zod": "^3.23.5"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.8",

@@ -1,8 +1,9 @@
-import { NextFunction, Request, Response } from "express";
-import { ErrorCode, HttpException } from "../exceptions/errorhandler";
-import { InternalException } from "../exceptions/internal_exception";
 import { ZodError } from "zod";
-import { BadRequestsException } from "../exceptions/bad_requests";
+import { NextFunction, Request, Response } from "express";
+
+import { BadRequestsException } from "../exceptions/bad_requests.js";
+import { InternalException } from "../exceptions/internal_exception.js";
+import { ErrorCode, HttpException } from "../exceptions/errorhandler.js";
 
 export const errorHandler = (func: Function) => {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -15,7 +16,7 @@ export const errorHandler = (func: Function) => {
         exception = new BadRequestsException(
           "Unprocessable Entity",
           ErrorCode.UNPROCESSABLE_ENTITY,
-          error
+          error.errors
         );
       else
         exception = new InternalException(

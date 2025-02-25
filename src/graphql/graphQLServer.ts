@@ -7,6 +7,12 @@ export const connectGraphQLServer = () => {
   const graphQLServer = new ApolloServer({
     typeDefs: graphQLSchema,
     resolvers: graphQLResolver,
+    introspection: process.env.NODE_ENV === "development",
+    formatError: (err) => {
+      return {
+        message: err.message,
+      };
+    },
   });
 
   return graphQLServer;
