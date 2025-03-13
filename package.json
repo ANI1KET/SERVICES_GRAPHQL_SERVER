@@ -7,8 +7,8 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "start": "set NODE_ENV=production&& node build/server.js",
-    "dev": "set NODE_ENV=development&& nodemon build/server.js"
+    "start": "set NODE_ENV=production && node build/server.js",
+    "dev": "set NODE_ENV=development && nodemon build/server.js"
   },
   "author": "",
   "license": "ISC",
