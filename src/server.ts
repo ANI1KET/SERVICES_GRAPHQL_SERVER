@@ -6,6 +6,7 @@ import express, { Express } from "express";
 import { PrismaClient } from "@prisma/client";
 import { expressMiddleware } from "@apollo/server/express4";
 
+import "./cronJobs.js";
 import authMiddleware from "./middlewares/auth.js";
 import { errorMiddleware } from "./middlewares/errors.js";
 import { connectGraphQLServer } from "./graphql/graphQLServer.js";
@@ -20,9 +21,11 @@ const limiter = rateLimit({
   message: "Too many requests, please try again later.",
 });
 
+app.set("trust proxy", 1);
+
 app.use(
   cors({
-    origin: true,
+    origin: "https://services.aniketrouniyar.com.np",
     credentials: true,
   })
 );
@@ -48,7 +51,7 @@ await graphQLServer.start();
 app.use(
   "/graphql",
   // cors<cors.CorsRequest>({
-  //   origin: true,
+  //   origin: "https://services.aniketrouniyar.com.np",
   //   credentials: true,
   // }),
   // express.json(),
