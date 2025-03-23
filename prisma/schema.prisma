@@ -26,7 +26,7 @@ enum Permission {
 
 model Subscription {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  permissions Json     @default("{}") // Example: {"ROOM": "2025-05-01T00:00:00Z", "LAND": "2025-06-01T00:00:00Z"}
+  permissions Json     @default("{}")
   // RELATIONSHIP
   userId      String   @unique @db.ObjectId
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -108,6 +108,7 @@ model Room {
 
   @@index([city])
   @@index([userId])
+  @@index([isActive])
   @@map("Rooms")
 }
 
@@ -177,6 +178,7 @@ model Store {
 
   @@index([city])
   @@index([userId])
+  @@index([isActive])
   @@map("Stores")
 }
 
@@ -203,6 +205,7 @@ model Hostel {
   city      String
   direction String?
   location  String
+  isActive  Boolean @default(true)
 }
 
 model Restaurant {
@@ -210,6 +213,7 @@ model Restaurant {
   city      String
   direction String?
   location  String
+  isActive  Boolean @default(true)
 }
 
 model Land {
@@ -217,6 +221,7 @@ model Land {
   city      String
   direction String?
   location  String
+  isActive  Boolean @default(true)
 }
 
 model Repair {
@@ -224,6 +229,7 @@ model Repair {
   city      String
   direction String?
   location  String
+  isActive  Boolean @default(true)
 }
 
 model Rental {
@@ -231,4 +237,5 @@ model Rental {
   city      String
   direction String?
   location  String
+  isActive  Boolean @default(true)
 }

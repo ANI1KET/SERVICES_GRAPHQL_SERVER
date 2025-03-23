@@ -140,7 +140,9 @@ type MutationResponse {
 
 type Mutation{
   # ROLE AND PERMISSION UPDATION
-  updateRolePermission(id:ID!,role:Role,permission:[Permission!]!):MutationResponse
+  removeUserSubs(userId:ID!):MutationResponse
+  downgradePermission(userId:ID!,permission:Permission!):MutationResponse
+  updateRolePermission(userId:ID!,role:Role,durationInDays:Int!,permission:Permission!):MutationResponse
   # ROOM UPDATION
   updateRoomAvailability(
     id:ID!,

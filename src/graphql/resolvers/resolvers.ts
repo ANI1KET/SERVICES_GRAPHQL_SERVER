@@ -29,12 +29,18 @@ import {
   getUsers,
   userByEmailOrNumber,
 } from "../../controllers/query/users.js";
-import { updateRolePermission } from "../../controllers/mutation/users.js";
+import {
+  removeUserSubs,
+  downgradePermission,
+  updateRolePermission,
+} from "../../controllers/mutation/users.js";
 import { getReview, getReviews } from "../../controllers/query/roomReviews.js";
 
 export const graphQLResolver = {
   Mutation: {
     // USER UPDATE
+    removeUserSubs,
+    downgradePermission,
     updateRolePermission,
     // ROOM UPDATE
     deleteRoom,
