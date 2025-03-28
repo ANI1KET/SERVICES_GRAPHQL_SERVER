@@ -116,6 +116,18 @@ type UserCategoryStats {
   BROKER: UserCategory
 }
 
+type InterestedBy {
+  user: User!
+  createdAt: String!
+}
+
+type RoomData {
+  id:ID!
+  room: Room!
+  roomId: ID!
+  interestedBy: [InterestedBy!]!
+}
+
 type Query{
     # USER
     users:[User]
@@ -130,8 +142,10 @@ type Query{
     reviews:[RoomReview]
     review(id:ID!):RoomReview
     # DASHBOARD
-    totalListedRoom(id:ID!): RoomStats!
-    userCategoryStats: [UserCategoryStats!]!,
+    totalListedRoom(id:ID!):RoomStats!
+    userCategoryStats:[UserCategoryStats!]!,
+    # INTERESTEDROOMS
+    interestedRooms(listerId:ID!):[RoomData!]!
 }
 
 type MutationResponse {
@@ -155,6 +169,8 @@ type Mutation{
   ): MutationResponse
   # ROOM DELETION
   deleteRoom(id:ID!):MutationResponse
+  # INTERESTEDROOM DELETION
+  deleteInterestedUser(userId:ID!,id:ID!):MutationResponse
 }
 
 `;

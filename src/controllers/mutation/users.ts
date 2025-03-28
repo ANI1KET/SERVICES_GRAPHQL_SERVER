@@ -188,6 +188,6 @@ export const removeUserSubs = async (
   ]);
 
   return {
-    message: "Remove User Subscription successfully.",
+    message: "Removed User Subscription successfully.",
   };
 };

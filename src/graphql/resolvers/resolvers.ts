@@ -35,6 +35,8 @@ import {
   updateRolePermission,
 } from "../../controllers/mutation/users.js";
 import { getReview, getReviews } from "../../controllers/query/roomReviews.js";
+import { getInterestedRooms } from "../../controllers/query/interestedRooms.js";
+import { deleteInterestedUser } from "../../controllers/mutation/interestedRooms.js";
 
 export const graphQLResolver = {
   Mutation: {
@@ -45,6 +47,8 @@ export const graphQLResolver = {
     // ROOM UPDATE
     deleteRoom,
     updateRoomAvailability,
+    // INTERESTEDROOM DELETION
+    deleteInterestedUser,
   },
   Query: {
     // USER
@@ -61,6 +65,7 @@ export const graphQLResolver = {
     reviews: getReviews,
     // DASHBOARD
     userCategoryStats,
+    interestedRooms: getInterestedRooms,
     totalListedRoom: getUserListedRoomStats,
   },
   User: {
