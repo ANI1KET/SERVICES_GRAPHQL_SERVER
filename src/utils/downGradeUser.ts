@@ -76,15 +76,7 @@ export const downGradeUser = async () => {
     ...(roomDeactivations.length
       ? [
           prismaClient.room.updateMany({
-            where: { userId: { in: roomDeactivations } },
-            data: { isActive: false },
-          }),
-        ]
-      : []),
-    ...(storeDeactivations.length
-      ? [
-          prismaClient.store.updateMany({
-            where: { userId: { in: storeDeactivations } },
+            where: { listerId: { in: roomDeactivations } },
             data: { isActive: false },
           }),
         ]

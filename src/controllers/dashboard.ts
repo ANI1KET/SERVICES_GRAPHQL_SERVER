@@ -6,14 +6,14 @@ export const getUserListedRoomStats = async (_: any, arg: { id: string }) => {
   const [cityWiseStats, overallStats] = await Promise.all([
     prismaClient.room.groupBy({
       by: ["city"],
-      where: { userId: arg.id },
+      where: { listerId: arg.id },
       _count: {
         _all: true,
         available: true,
       },
     }),
     prismaClient.room.aggregate({
-      where: { userId: arg.id },
+      where: { listerId: arg.id },
       _count: {
         _all: true,
         available: true,

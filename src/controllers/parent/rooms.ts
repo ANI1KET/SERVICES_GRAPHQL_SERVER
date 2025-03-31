@@ -8,7 +8,7 @@ export const getUserCreatedRooms = async (
   args: { offset?: number; limit?: number }
 ) =>
   await prismaClient.room.findMany({
-    where: { userId: user.id },
+    where: { listerId: user.id },
     skip: args.offset,
     take: args.limit,
   });

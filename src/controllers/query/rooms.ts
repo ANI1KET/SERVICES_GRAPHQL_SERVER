@@ -15,7 +15,7 @@ export const getUserListedRoomCitiesLocations = async (
   arg: { id: string }
 ) => {
   const roomsCitiesLocations = await prismaClient.room.findMany({
-    where: { userId: arg.id },
+    where: { listerId: arg.id },
     select: {
       city: true,
       location: true,

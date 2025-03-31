@@ -11,7 +11,7 @@ export const getUserById = async (room: Room, _: any, context: Context) => {
 
   return await prismaClient.user.findUnique({
     where: {
-      id: room.userId,
+      id: room.listerId,
     },
   });
 };

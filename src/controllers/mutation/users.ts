@@ -69,15 +69,7 @@ export const updateRolePermission = async (
     ...(permission === "room"
       ? [
           prismaClient.room.updateMany({
-            where: { userId },
-            data: { isActive: true },
-          }),
-        ]
-      : []),
-    ...(permission === "store"
-      ? [
-          prismaClient.store.updateMany({
-            where: { userId },
+            where: { listerId: userId },
             data: { isActive: true },
           }),
         ]
@@ -105,51 +97,50 @@ export const downgradePermission = async (
 
   const subscription = await prismaClient.subscription.findUnique({
     where: { userId: userId },
-    select: { permissions: true, expiresAt: true },
+    select: { permissions: true },
   });
+
+  if (!subscription) return { message: "No subscription found." };
 
   const existingPermissions = {
     ...(subscription?.permissions as Record<string, string>),
   };
-
   delete existingPermissions[permission];
 
-  const newExpiresAt = new Date(
-    Math.min(...Object.values(existingPermissions).map(Date.parse))
-  );
+  const remainingPermissions = Object.keys(existingPermissions);
 
-  await prismaClient.$transaction([
-    prismaClient.subscription.update({
-      where: { userId },
-      data: { permissions: existingPermissions, expiresAt: newExpiresAt },
-    }),
-    prismaClient.user.update({
-      where: { id: userId },
-      data: {
-        permission: Object.keys(existingPermissions) as Permission[],
-      },
-    }),
-    ...(permission === "room"
-      ? [
-          prismaClient.room.updateMany({
-            where: { userId: userId },
-            data: { isActive: false },
-          }),
-        ]
-      : []),
-    ...(permission === "store"
-      ? [
-          prismaClient.store.updateMany({
-            where: { userId: userId },
-            data: { isActive: false },
-          }),
-        ]
-      : []),
-  ]);
+  return await prismaClient
+    .$transaction([
+      remainingPermissions.length
+        ? prismaClient.subscription.update({
+            where: { userId },
+            data: {
+              permissions: existingPermissions,
+              expiresAt: new Date(
+                Math.min(...Object.values(existingPermissions).map(Date.parse))
+              ),
+            },
+          })
+        : prismaClient.subscription.delete({ where: { userId } }),
 
-  return {
-    message: "Downgraded Permission successfully.",
-  };
+      prismaClient.user.update({
+        where: { id: userId },
+        data: {
+          role: remainingPermissions.length ? undefined : "USER",
+          permission: remainingPermissions as Permission[],
+        },
+      }),
+
+      ...(permission === "room"
+        ? [
+            prismaClient.room.updateMany({
+              where: { listerId: userId },
+              data: { isActive: false },
+            }),
+          ]
+        : []),
+    ])
+    .then(() => ({ message: "Downgraded Permission successfully." }));
 };
 
 export const removeUserSubs = async (
@@ -178,11 +169,7 @@ export const removeUserSubs = async (
       },
     }),
     prismaClient.room.updateMany({
-      where: { userId: userId },
-      data: { isActive: false },
-    }),
-    prismaClient.store.updateMany({
-      where: { userId: userId },
+      where: { listerId: userId },
       data: { isActive: false },
     }),
   ]);
